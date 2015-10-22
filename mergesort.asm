@@ -5,6 +5,7 @@
 #https://gist.github.com/jmc734/6630563
 #http://stackoverflow.com/questions/22900985/using-a-random-number-generator-in-mips
 #http://stackoverflow.com/questions/3542588/recursive-merge-sort-in-mips-using-stack
+#http://cs.uni.edu/~fienup/cs1410f11/homework/hw7.pdf
 
 //merge sort
 #BASE CASE
