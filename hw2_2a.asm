@@ -43,7 +43,7 @@ check:
     sub $t0, $s1, $a1
     bgez $t0, looproutine
     if m-a is greater than 0
-        simply add one var_b val into var_c
+	simply add one var_b val into var_c
 
     blez $t0, exit
     if n-b is <= 0
