@@ -15,7 +15,7 @@
 
 .data
 .align 2
-var_a: .word 2 3 5 5 8 10 11 17 18 20 
+var_a: .word 2 3 5 5 8 10 11 17 18 20
 var_b: .word 5 6 7 8 14 15 17
 var_m: .word 10
 var_n: .word 7
@@ -25,55 +25,55 @@ newl:  .asciiz "\n"
 .text
 .globl start
 start:
-	add $a1, $zero, $zero #index of var_a
-	add $a2, $zero, $zero #index of var_b
-	add $a3, $zero, $zero #index of var_c
+    add $a1, $zero, $zero #index of var_a
+    add $a2, $zero, $zero #index of var_b
+    add $a3, $zero, $zero #index of var_c
 
-	lw $s1, var_m #length of var_a
-	lw $s2, var_n #length of var_b
+    lw $s1, var_m #length of var_a
+    lw $s2, var_n #length of var_b
 
 loopcheck:
-	sub $t0, $s1, $a1
-	bgez $t0, check
+    sub $t0, $s1, $a1
+    bgez $t0, check
 
-	sub $t0, $s2, $a2
-	bgez $t0, addbtoc
+    sub $t0, $s2, $a2
+    bgez $t0, addbtoc
 
-	blez $t0, bbye
+    blez $t0, bbye
 check:
-	sub $t0, $s2, $a2
-	bgez $t0, looproutine
+    sub $t0, $s2, $a2
+    bgez $t0, looproutine
 
-	sub $t0, $s1, $a1
-	bgez $t0, addatoc
-    	
-	blez $t0, bbye
+    sub $t0, $s1, $a1
+    bgez $t0, addatoc
+
+    blez $t0, bbye
 
 looproutine:
 
-	add $t0, $zero, $zero #t0 = 0, index of var_a
-	la  $t1, var_a #loads the array var_a into t1
-	mul $t3, $t0, 4 #multiply the index by 4 to know which address to point to
-	add $t2, $t1, $t3 # load into t2 the value of the number at index $t0 ^
-	lw  $t4, ($t2) #Load the actual value into $t4 for comparison later on
-	
-	#Do the above again for var_b
-	
-	add $t5, $zero, $zero # $t0 = 0, index of var_b
-	la  $t6, var_c
-	mul $t8, $t5, 4
-	add $t7, $t6, $t8
-	sw $a1, ($t7) #stores the value that we assign from the merge logic into $t6
+    add $t0, $zero, $zero #t0 = 0, index of var_a
+    la  $t1, var_a #loads the array var_a into t1
+    mul $t3, $t0, 4 #multiply the index by 4 to know which address to point to
+    add $t2, $t1, $t3 # load into t2 the value of the number at index $t0 ^
+    lw  $t4, ($t2) #Load the actual value into $t4 for comparison later on
+
+    #Do the above again for var_b
+
+    add $t5, $zero, $zero # $t0 = 0, index of var_b
+    la  $t6, var_c
+    mul $t8, $t5, 4
+    add $t7, $t6, $t8
+    sw $a1, ($t7) #stores the value that we assign from the merge logic into $t6
 
 bbye:
-	exit
-	
-	
+    exit
+
+
 .include    "cs47_macro.asm"
 
 .data
 .align 2
-var_a: .word 2 3 5 5 8 10 11 17 18 20 
+var_a: .word 2 3 5 5 8 10 11 17 18 20
 var_b: .word 5 6 7 8 14 15 17
 var_m: .word 10
 var_n: .word 7
@@ -134,7 +134,7 @@ looproutine:
 #$t1 is var_a
 #$t2 is var_b
 #$t3 is var_c
-    
+
     la  $t1, var_a
     mul $t0, $a1, 4
     add $t0, $t1, $t0
@@ -147,8 +147,8 @@ looproutine:
     lw  $t2, ($t0)
     #Loaded b into $t2
 
-    
-            
+
+
     if reg1 > reg2
         add b into c
     else
