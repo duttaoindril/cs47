@@ -1,16 +1,16 @@
 #$t0 is general use number
-#======================
+#=========================
 #$a1 is index of var_a
 #$a2 is index of var_b
 #$a3 is index of var_c
-#======================
+#=========================
 #$s1 is length of var_a
 #$s2 is length of var_b
-#======================
+#=========================
 #$t1 is var_a
 #$t2 is var_b
 #$t3 is var_c
-#======================
+#=========================
 .include    "cs47_macro.asm"
 
 .data
