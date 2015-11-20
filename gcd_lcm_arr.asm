@@ -5,7 +5,17 @@
 #$a0 & $a1 are arguments for functions
 #======================================
 
-.include "cs47_macro.asm"
+.macro	print_str($arg)
+	li $v0, 4
+	la $a0, $arg
+	syscall
+.end_macro
+
+.macro print_reg_int($arg)
+	li $v0, 1
+	move $a0, $arg
+	syscall
+.end_macro
 
 .data
 .align 2

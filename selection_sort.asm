@@ -12,7 +12,18 @@
 #$v1 is the index of the current min
 #$s2 is the current min
 #======================================
-.include    "cs47_macro.asm"
+
+.macro	print_str($arg)
+	li $v0, 4
+	la $a0, $arg
+	syscall
+.end_macro
+
+.macro print_reg_int($arg)
+	li $v0, 1
+	move $a0, $arg
+	syscall
+.end_macro
 
 .data
 .align 2
@@ -30,7 +41,7 @@ start:
 	add $a2, $zero, 0 #sort barrier index of var_a
 	#Get the length
 	lw $s1, var_m #length of var_a
-	
+
 loopcheck:
 	#Check if the sorted index reached the length yet
 	sub $t0, $s1, $a2 #If sorted index of a < length of a...
@@ -44,7 +55,7 @@ looproutine:
 	#Check to see if the index is greater than the length, and if it is swap+restart
 	sub $t0, $s1, $a1 #If sorted index of a < length of a...
 	blez $t0, swap #Jump to second check, else...
-	
+
 	#Get the current min
 	la  $s2, var_a #Load var_a array into $a2.
 	mul $t0, $v1, 4 #Get pointer reference by mult index by 4.
@@ -60,10 +71,10 @@ looproutine:
 	#See if the current index is smaller than the min
 	sub $t0, $s2, $t2
 	blez $t0, nomin #If the current number is bigger, then skip assigning the new min
-	
+
 	#Set the min to the current index
 	move $v1, $a1
-nomin:	
+nomin:
 	#Add the index and keep moving
 	addi $a1, $a1, 1
 	j looproutine
@@ -80,19 +91,19 @@ swap:
 	mul $t0, $a2, 4 #Get pointer reference by mult index by 4.
 	add $t0, $t1, $t0 #Go to the index from pointer in array.
 	lw  $t1, ($t0) #Get value from index in var_a, store into $s2 as min.
-	
+
 	#Put the min at the sorted barrier
 	la  $t2, var_a
 	mul $t0, $a2, 4
 	add $t0, $t2, $t0
-	sw $s2, ($t0) #stores the value $s2 from the merge logic into ($t0)	
+	sw $s2, ($t0) #stores the value $s2 from the merge logic into ($t0)
 
 	#Put the val at the sorted barrier at the min pos
 	la  $t2, var_a
 	mul $t0, $v1, 4
 	add $t0, $t2, $t0
-	sw $t1, ($t0) #stores the value $t1 from the merge logic into ($t0)	
-	
+	sw $t1, ($t0) #stores the value $t1 from the merge logic into ($t0)
+
 	add $a2, $a2, 1 #Add to the sorted barrier
 	j loopcheck
 
@@ -102,7 +113,7 @@ bbye:
 
 print:
 	sub $t0, $s1, $a1 #If sorted index of a < length of a...
-	blez $t0, exit #Jump to second check, else...		
+	blez $t0, exit #Jump to second check, else...
 	la  $a2, var_a #Load var_a array into $a2.
 	mul $t0, $a1, 4 #Get pointer reference by mult index by 4.
 	add $t0, $a2, $t0 #Go to the index from pointer in array.

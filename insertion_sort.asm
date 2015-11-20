@@ -10,7 +10,18 @@
 #======================================
 #$v1 is the temp value of var_a
 #======================================
-.include    "cs47_macro.asm"
+
+.macro	print_str($arg)
+	li $v0, 4
+	la $a0, $arg
+	syscall
+.end_macro
+
+.macro print_reg_int($arg)
+	li $v0, 1
+	move $a0, $arg
+	syscall
+.end_macro
 
 .data
 .align 2
@@ -48,7 +59,7 @@ loopcheck:
 
 	sub $t0, $t2, $t1 #If num at a is greater than a-1...
 	bgtz $t0, swap #Jump to swap, else...
-	
+
 	j moveup #Moveup to the next index to check
 swap:
 	la  $t3, var_a
@@ -62,7 +73,7 @@ swap:
 	mul $t0, $a1, 4
 	add $t0, $t3, $t0
 	sw $t2, ($t0)
-			
+
 	addi $a1, $a1, -2
 begofarray:
 	addi $a1, $a1, -1
@@ -75,7 +86,7 @@ bbye:
 
 print:
 	sub $t0, $s1, $a1 #If sorted index of a < length of a...
-	blez $t0, exit #Jump to second check, else...		
+	blez $t0, exit #Jump to second check, else...
 	la  $a2, var_a #Load var_a array into $a2.
 	mul $t0, $a1, 4 #Get pointer reference by mult index by 4.
 	add $t0, $a2, $t0 #Go to the index from pointer in array.
