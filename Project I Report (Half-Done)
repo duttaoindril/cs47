@@ -1,0 +1,31 @@
+CS 47: Project I
+
+ 
+Authors Name/s per 1st Affiliation (Author)
+Dept. name of organization (Line 1 of Affiliation - optional)
+Name of organization - acronyms acceptable (line 2)
+City, Country (line 3)
+name@xyz.com – optional (line 4)
+
+
+ 
+ 
+Abstract—This report contains information about the CS 47 (Computer Systems) project. The student is required to make a program that does several arithmetic computations using MIPS assembly language. The report will talk about the project’s purpose and functionality, how the student reaches this goal through his/her program, and other additional information that would help the readers or users understand how to operate the program better.
+Index Terms—Component, formatting, style, styling, insert. (key words)
+I. INTRODUCTION (HEADING 1)
+This project is done for the CS 47 (Computer Systems) class and is written in MIPS assembly language. The sole purpose of the project is to create a program that could compute basic arithmetic operations when users input certain numbers and operations. This is an interactive program that asks users for input, and it is also self-testing, meaning the program would automatically print out the results of the arithmetic operations after the user inputs the necessary information and the program has executed them.
+The program in general will ask users to input two integers and basic arithmetic operations, such as addition, subtraction, multiplication, or division. The result of the arithmetic computation would then be printed out by the program, along with the comment whether or not the result is correct.
+The program’s functionality is reached through three different procedures. Each of the separate procedures, their functions, and any other additional information would be discussed in the length of this report.
+II. PROCEDURE I
+Procedure I (write add_normal, sub_normal, mul_normal and div_normal procedures…) What does this piece of code do?
+III. PROCEDURE II
+Write add_logic, sub_logic, mul_logic, etc….
+IV. PROCEDURE III
+Write two procedures au_normal and au_logic which takes two integers and one operation code for…
+V. RESULTS
+After running our program, the results are as follows…
+
+VI. CONCLUSION
+Conclusion of our program is……
+ 
+

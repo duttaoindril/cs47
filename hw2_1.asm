@@ -21,13 +21,6 @@ begin:
 	bltz $a1, bzzz
 	addi $t0, $zero, 0
 	addi $t1, $zero, 1
-	#print_str(resultb)
-	#print_reg_int($a1)
-	#print_str(resultc)
-	#print_reg_int($t0)
-	#print_str(resultd)
-	#print_reg_int($t1)
-	#print_str(newl)
 	addi $sp, $sp, -4
 	sw $t0, ($sp)
 	addi $sp, $sp, -4
@@ -37,13 +30,6 @@ begin:
 fibloop:
 	add $t0, $t0, $t1
 	add $t1, $t1, $t0
-	#print_str(resultb)
-	#print_reg_int($a1)
-	#print_str(resultc)
-	#print_reg_int($t0)
-	#print_str(resultd)
-	#print_reg_int($t1)
-	#print_str(newl)
 	addi $sp, $sp, -4
 	sw $t0, ($sp)
 	addi $sp, $sp, -4
@@ -64,7 +50,6 @@ news:
 	print_str(newl)
 	print_str(newl)
 	j begin
-	
 bzzz:
 	print_str(promptb)
 	j   begin
