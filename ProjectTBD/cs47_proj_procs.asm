@@ -82,7 +82,22 @@ printf_ret:
 #####################################################################
 au_logical:
 # TBD: Complete it 
-	
+	addi	$sp, $sp, -64
+	sw	$s0, 64($sp)
+	sw	$s1, 60($sp)
+	sw	$s2, 56($sp)
+	sw	$s3, 52($sp)
+	sw	$s4, 48($sp)
+	sw	$s5, 44($sp)
+	sw	$s6, 40($sp)
+	sw	$s7, 36($sp)
+	sw	$t0, 32($sp)
+	sw	$t1, 28($sp)
+	sw	$t2, 24($sp)
+	sw	$t4, 20($sp)
+	sw	$t5, 16($sp)
+	sw	$t6, 12($sp)
+	sw	$t7,  8($sp)
 
 	beq $a2, 0x2B, addition
 	beq $a2, 0x2D, subtraction
@@ -138,6 +153,49 @@ SUB:
 	
 multiplication:
 	
+	or $s6, $a0, $zero
+	or $s7, $a1, $zero
+	# Determine if both/neither are negative or just one is negative
+CHECK_FIRST_NUMBER_MULT:
+	bgez $s6, FIRST_NOT_NEGATIVE_MULT # Check if first number is negative
+	# first number is negative, so set positive
+	
+	not $t0, $s6
+	ori $t1, $zero, 1
+NEGATE_FIRST_NUM_MULT:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, NEGATE_FIRST_NUM_MULT
+	
+	move $s6, $t0 #Temporarily move our new number to $s6
+	bgtz $s7, ONE_IS_NEGATIVE_MULT
+	j INITIATE_MULT
+	
+FIRST_NOT_NEGATIVE_MULT:
+	bgtz $s7, INITIATE_MULT
+	
+	not $t0, $s7
+	ori $t1, $zero, 1
+NEGATE_SECOND_NUM_MULT:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, NEGATE_SECOND_NUM_MULT
+	
+	move $s7, $t0 #Temporarily move our new number to $s6
+	
+ONE_IS_NEGATIVE_MULT:
+	ori $t2, $zero, 1
+	
+INITIATE_MULT:
+	or $a0, $s6, $zero
+	or $a1, $s7, $zero
+
 	# Using $t5 for HI and $t6 for LO
 	# Set $t4 as our index for LO, which is 1, initially.
 	# Set $t3 as our index for HI, which is 31, initially.
@@ -200,7 +258,6 @@ ADD_C_TO_HI:
 	or $t5, $zero, $s1
 	
 INCREMENT_POS:
-	
 	move $s1, $t4 # Increment our LO index by 1
 	ori $s2, $zero, 1
 INCREMENT_LO:
@@ -228,6 +285,22 @@ DECREMENT_HI:
 	j MAIN_MULT # Loop main function
 	
 END_MULT:
+	beqz $t2, END_MULT_FINAL
+	not $t5, $t5
+	
+	not $t0, $t6
+	ori $t1, $zero, 1
+NEGATE_MULT_FINAL:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, NEGATE_MULT_FINAL
+	
+	or $t6, $zero, $t0
+	
+END_MULT_FINAL:
 	move $v0, $t6 # Move answers to registers
 	move $v1, $t5
 	j done    
@@ -237,9 +310,25 @@ END_MULT:
 division:
 	
 	
+	
 	#----------------------#
 	
 done:
+	lw	$s0, 64($sp)
+	lw	$s1, 60($sp)
+	lw	$s2, 56($sp)
+	lw	$s3, 52($sp)
+	lw	$s4, 48($sp)
+	lw	$s5, 44($sp)
+	lw	$s6, 40($sp)
+	lw	$s7, 36($sp)
+	lw	$t0, 32($sp)
+	lw	$t1, 28($sp)
+	lw	$t2, 24($sp)
+	lw	$t4, 20($sp)
+	lw	$t5, 16($sp)
+	lw	$t6, 12($sp)
+	lw	$t7,  8($sp)
 	jr 	$ra
 	
 #####################################################################
