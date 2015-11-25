@@ -153,11 +153,12 @@ SUB:
 	
 multiplication:
 	
+	or $t8, $zero, $zero
 	or $s6, $a0, $zero
 	or $s7, $a1, $zero
 	# Determine if both/neither are negative or just one is negative
 CHECK_FIRST_NUMBER_MULT:
-	bgez $s6, FIRST_NOT_NEGATIVE_MULT # Check if first number is negative
+	bgez $a0, FIRST_NOT_NEGATIVE_MULT # Check if first number is negative
 	# first number is negative, so set positive
 	
 	not $t0, $s6
@@ -171,12 +172,13 @@ NEGATE_FIRST_NUM_MULT:
 	bnez $t1, NEGATE_FIRST_NUM_MULT
 	
 	move $s6, $t0 #Temporarily move our new number to $s6
-	bgtz $s7, ONE_IS_NEGATIVE_MULT
-	j INITIATE_MULT
+	bgtz $a1, ONE_IS_NEGATIVE_MULT
+	j BOTH_ARE_NEGATIVE
 	
 FIRST_NOT_NEGATIVE_MULT:
-	bgtz $s7, INITIATE_MULT
+	bgtz $a1, INITIATE_MULT
 	
+BOTH_ARE_NEGATIVE:
 	not $t0, $s7
 	ori $t1, $zero, 1
 NEGATE_SECOND_NUM_MULT:
@@ -187,10 +189,12 @@ NEGATE_SECOND_NUM_MULT:
 	move $t1, $t3
 	bnez $t1, NEGATE_SECOND_NUM_MULT
 	
-	move $s7, $t0 #Temporarily move our new number to $s6
+	move $s7, $t0 #Temporarily move our new number to $s7
+	
+	blez $a0, INITIATE_MULT
 	
 ONE_IS_NEGATIVE_MULT:
-	ori $t2, $zero, 1
+	ori $t8, $zero, 1
 	
 INITIATE_MULT:
 	or $a0, $s6, $zero
@@ -203,16 +207,16 @@ INITIATE_MULT:
 	ori $t3, $zero, 31
 	
 	# INITIAL ADDITION
-	andi $t7, $a1, 1
-	srl $a1, $a1, 1
+	beqz $s7, END_MULT
+	andi $t7, $s7, 1
 	beqz $t7, MAIN_MULT
-	or $t6, $t6, $a0
-	beqz $a1, END_MULT
+	or $t6, $zero, $s6
 	
 MAIN_MULT: # MAIN PROCEDURE
-	andi $t7, $a1, 1 # Check if last digit of second number is 1, if so, continue.
-	srl $a1, $a1, 1
-	beqz $t7, END_MULT
+	beqz $s7, END_MULT
+	srl $s7, $s7, 1
+	andi $t7, $s7, 1 # Check if last digit of second number is 1, if so, continue.
+	beqz $t7, INCREMENT_POS
 	# We're using $s0 as our storage for shifted version of $a0 as C (either right or left)
 	sllv $s0, $a0, $t4 # In this case, we're shifting left, for addition to LO
 	
@@ -285,7 +289,7 @@ DECREMENT_HI:
 	j MAIN_MULT # Loop main function
 	
 END_MULT:
-	beqz $t2, END_MULT_FINAL
+	beqz $t8, END_MULT_FINAL
 	not $t5, $t5
 	
 	not $t0, $t6
@@ -308,9 +312,136 @@ END_MULT_FINAL:
 	#----------------------#
 	
 division:
+	or $s5, $zero, $zero # The Quotient Register
+	or $t8, $zero, $zero
+	or $s6, $a0, $zero
+	or $s7, $a1, $zero
+	# Determine if both/neither are negative or just one is negative
+CHECK_FIRST_NUMBER_DIV:
+	bgez $a0, FIRST_NOT_NEGATIVE_DIV # Check if first number is negative
+	# first number is negative, so set positive
 	
+	not $t0, $s6
+	ori $t1, $zero, 1
+NEGATE_FIRST_NUM_DIV:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, NEGATE_FIRST_NUM_DIV
 	
+	move $s6, $t0 #Temporarily move our new number to $s6
+	bgtz $a1, ONE_IS_NEGATIVE_DIV
+	j BOTH_ARE_NEGATIVE_DIV
 	
+FIRST_NOT_NEGATIVE_DIV:
+	bgtz $a1, INITIATE_DIV
+	
+BOTH_ARE_NEGATIVE_DIV:
+	not $t0, $s7
+	ori $t1, $zero, 1
+NEGATE_SECOND_NUM_DIV:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, NEGATE_SECOND_NUM_DIV
+	
+	move $s7, $t0 #Temporarily move our new number to $s7
+	
+	blez $a0, INITIATE_DIV
+	
+ONE_IS_NEGATIVE_DIV:
+	ori $t8, $zero, 1
+	
+INITIATE_DIV:
+	bge $s6, $s7, SECOND_IS_SMALLER_DIV
+	move $v0, $zero
+	move $v1, $a0
+	j done	
+		
+SECOND_IS_SMALLER_DIV:
+	not $t0, $s7
+	ori $t1, $zero, 1
+GET_SECOND_NEGATIVE:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, GET_SECOND_NEGATIVE
+	
+	move $s4, $t0
+	
+MAIN_DIV:
+	move $t0, $s6
+	move $t1, $s4
+DIV_LOOP:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, DIV_LOOP
+	move $s6, $t0
+
+	move $t0, $s5
+	ori $t1, $zero, 1
+INCREMENT_QUOTIENT:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, INCREMENT_QUOTIENT
+	move $s5, $t0
+	
+	move $t0, $s6
+	move $t1, $s4
+CHECK_REM:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, CHECK_REM
+	bgez $t0, MAIN_DIV
+
+END_DIV:
+	beqz $t8, END_DIV_FINAL
+	
+	not $t0, $s5
+	ori $t1, $zero, 1
+NEGATE_DIV_FINAL:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, NEGATE_DIV_FINAL
+	
+	move $s5, $t0
+
+	beqz $s6, END_DIV_FINAL
+
+	not $t0, $s6
+	ori $t1, $zero, 1
+NEGATE_DIV_REM:
+	xor $t2, $t0, $t1
+	and $t3, $t0, $t1
+	sll $t3, $t3, 1
+	move $t0, $t2
+	move $t1, $t3
+	bnez $t1, NEGATE_DIV_REM
+	
+	move $s6, $t0
+			
+END_DIV_FINAL:
+	move $v0, $s5 # Move answers to registers
+	move $v1, $s6
+	j done    
 	#----------------------#
 	
 done:
