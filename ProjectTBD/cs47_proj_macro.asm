@@ -73,3 +73,15 @@
 	la	$a0, $format
 	jal	printf
 	.end_macro
+	
+.macro read_char($arg)
+	li $v0, 12
+	syscall
+	move $arg, $v0
+.end_macro
+
+.macro print_reg_char($arg)
+	li $v0, 11
+	move $a0, $arg
+	syscall
+.end_macro 

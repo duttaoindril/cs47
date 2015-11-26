@@ -22,7 +22,7 @@ mul_msg: .asciiz "(%d %c %d) \t normal=> HI:%d LO:%d \t\ logical=> HI:%d LO:%d \
 div_msg: .asciiz "(%d %c %d) \t normal=> R:%d Q:%d \t\ logical=> R:%d Q:%d \t [%s]\n"
 finalMSG: .asciiz "\n\n*** OVERALL RESULT %s ***\n"
 statPASS: .asciiz "PASS"
-statFAIL: .asciiz "FAILED"
+statFAIL: .word 10
 
 .text
 .globl main
